@@ -1,6 +1,7 @@
 import argparse
 import multiprocessing
 import math
+import sys
 import psutil
 
 
@@ -70,7 +71,10 @@ def main():
 if __name__ == '__main__':
     # Safely set start method if it's not already set
     try:
-        multiprocessing.set_start_method('fork')
+        if sys.platform == "win32":
+            multiprocessing.set_start_method('spawn', force=True)
+        else:
+            multiprocessing.set_start_method('fork', force=True)
     except RuntimeError:
         pass  # Start method has already been set, continue execution
     main()
